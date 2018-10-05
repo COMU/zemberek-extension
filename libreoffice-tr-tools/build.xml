@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project default="dist">
+
+    <!-- Properties -->
+    <property name="project.version" value="0.1.0"/>
+    <property name="project.name" value="libreoffice-tr-tools-${project.version}"/>
+
+    <property name="src.dir" value="src"/>
+    <property name="dist.dir" value="dist"/>
+    <property name="lib.dir" value="lib"/>
+    <property name="res.dir" value="resources"/>
+    <property name="build.dir" value="build"/>
+    <property name="spellchecker.registration.class" value="lo.tr.tools.spellchecker.TurkishSpellChecker"/>
+    <!-- libraries -->
+    <path id="classpath.runtime">
+        <fileset dir="lib/lo"/>
+    </path>
+
+    <target name="initialize">
+        <mkdir dir="${build.dir}"/>
+        <mkdir dir="${dist.dir}"/>
+    </target>
+
+    <target name="clean" description="remove build-related items">
+        <delete dir="${build.dir}"/>
+        <delete dir="${dist.dir}"/>
+    </target>
+
+    <target name="compile"
+            depends="clean, initialize"
+            description="Compile all java files">
+
+        <javac destdir="${build.dir}"
+               source="1.8"
+               target="1.8"
+               classpathref="classpath.runtime"
+               debug="true"
+               debuglevel="vars,lines,source">
+            <src path="${src.dir}"/>
+        </javac>
+        <copy todir="${build.dir}" includeemptydirs="false">
+            <fileset dir="${src.dir}">
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="jar" depends="compile">
+        <jar file="${dist.dir}/${project.name}.jar">
+            <fileset dir="${build.dir}"/>
+            <manifest>
+                <attribute name="RegistrationClassName" value="${spellchecker.registration.class}"/>
+                <attribute name="Class-Path" value="${project.name}.jar"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="dist" depends="jar" description="Generates distribution.">
+        <zip destfile="${project.name}.oxt">
+            <zipfileset file="${dist.dir}/${project.name}.jar"/>
+            <zipfileset dir="${res.dir}"/>
+        </zip>
+    </target>
+</project>
