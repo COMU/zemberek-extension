@@ -5,31 +5,32 @@ import java.util.List;
 import zemberek.morphology.TurkishMorphology;
 import zemberek.normalization.TurkishSpellChecker;
 
-public class ZemberekSpellCheck implements TurkishLinguist{
+public class ZemberekSpellCheck implements TurkishLinguist {
 
-    private static ZemberekSpellCheck zemberekSpellCheckInstance;
+  public static ZemberekSpellCheck instance = new ZemberekSpellCheck();
 
-    private ZemberekSpellCheck(){}
+  private TurkishMorphology morphology;
+  private TurkishSpellChecker spellChecker;
 
-    public static ZemberekSpellCheck getInstance(){
-        if (zemberekSpellCheckInstance == null){
-            zemberekSpellCheckInstance = new ZemberekSpellCheck();
-        }
-        return zemberekSpellCheckInstance;
+
+  private ZemberekSpellCheck() {
+    this.morphology = TurkishMorphology.createWithDefaults();
+    try {
+      this.spellChecker = new TurkishSpellChecker(morphology);
+    } catch (IOException e) {
+      e.printStackTrace();
     }
+  }
 
-    public boolean isCorrect(String w){
-        try {
-            TurkishMorphology morphology = TurkishMorphology.createWithDefaults();
-            TurkishSpellChecker spellChecker = new TurkishSpellChecker(morphology);
-            return spellChecker.check(w);
-        }catch(IOException ex) { return true;}
-    }
-    public List<String> getSuggestions(String s) {
-        try {
-            TurkishMorphology morphology = TurkishMorphology.createWithDefaults();
-            TurkishSpellChecker spellChecker = new TurkishSpellChecker(morphology);
-            return spellChecker.suggestForWord(s);
-        }catch(IOException ex) { return null;}
-    }
+  public static ZemberekSpellCheck getInstance() {
+    return instance;
+  }
+
+  public boolean isCorrect(String w) {
+    return spellChecker.check(w);
+  }
+
+  public List<String> getSuggestions(String s) {
+    return spellChecker.suggestForWord(s);
+  }
 }
