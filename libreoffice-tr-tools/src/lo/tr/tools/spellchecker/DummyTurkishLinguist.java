@@ -2,7 +2,7 @@ package lo.tr.tools.spellchecker;
 
 import java.util.*;
 
-class DummyTurkishLinguist {
+class DummyTurkishLinguist implements TurkishLinguist {
 
     private Map<String, List<String>> spellMap = new HashMap<>();
 
@@ -12,11 +12,11 @@ class DummyTurkishLinguist {
         spellMap.put("keske", Arrays.asList("keşke", "keski", "keşkek"));
     }
 
-    List<String> getSuggestions(String s) {
+    public List<String> getSuggestions(String s) {
         return spellMap.containsKey(s) ? spellMap.get(s) : new ArrayList<>(0);
     }
 
-    boolean isCorrect(String w) {
+    public boolean isCorrect(String w) {
         return !spellMap.containsKey(w);
     }
 }

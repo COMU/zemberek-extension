@@ -49,6 +49,7 @@ import com.sun.star.uno.UnoRuntime;
 import lo.tr.tools.OneInstanceFactory;
 import lo.tr.tools.XSpellAlternatives_impl;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,7 +65,8 @@ public class TurkishSpellChecker extends ComponentBase implements
     static Locale defaultLocale = new Locale();
 
     //TODO: change this with Zemberek later.
-    private static DummyTurkishLinguist dummyTurkishLinguist = new DummyTurkishLinguist();
+    //private static DummyTurkishLinguist dummyTurkishLinguist = new DummyTurkishLinguist();
+    private static ZemberekSpellCheck zemberekSpellCheckInstance = ZemberekSpellCheck.getInstance();
 
     PropChgHelper_Spell aPropChgHelper;
     ArrayList<?> aEvtListeners;
@@ -155,10 +157,10 @@ public class TurkishSpellChecker extends ComponentBase implements
     private short GetSpellFailure(
             String aWord,
             Locale aLocale,
-            PropertyValue[] aProperties) {
+            PropertyValue[] aProperties){
         short nRes = -1;
         if (IsEqual(aLocale, turkishLocale)) {
-            if (!dummyTurkishLinguist.isCorrect(aWord)) {
+            if (!zemberekSpellCheckInstance.isCorrect(aWord)) {
                 nRes = SpellFailure.SPELLING_ERROR;
             }
         }
@@ -177,7 +179,7 @@ public class TurkishSpellChecker extends ComponentBase implements
         String[] aProposals = null;
 
         if (IsEqual(aLocale, turkishLocale)) {
-            List<String> proposalList = dummyTurkishLinguist.getSuggestions(aWord);
+            List<String> proposalList = zemberekSpellCheckInstance.getSuggestions(aWord);
             aProposals = proposalList.toArray(new String[0]);
             if (aProposals.length == 0) {
                 aProposals = new String[1];
@@ -227,7 +229,7 @@ public class TurkishSpellChecker extends ComponentBase implements
         boolean bIsSpellUpperCase = GetValueToUse("IsSpellUpperCase", false, aProperties);
         boolean bIsSpellCapitalization = GetValueToUse("IsSpellCapitalization", true, aProperties);
 
-        short nFailure = GetSpellFailure(aWord, aLocale, aProperties);
+        short nFailure = GetSpellFailure (aWord, aLocale, aProperties);
         if (nFailure != -1) {
             // postprocess result for errors that should be ignored
             if ((!bIsSpellUpperCase && IsUpper(aWord, aLocale))

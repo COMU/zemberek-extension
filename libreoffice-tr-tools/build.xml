@@ -14,6 +14,7 @@
     <!-- libraries -->
     <path id="classpath.runtime">
         <fileset dir="lib/lo"/>
+        <fileset dir="lib/runtime"/>
     </path>
 
     <target name="initialize">
@@ -50,7 +51,7 @@
             <fileset dir="${build.dir}"/>
             <manifest>
                 <attribute name="RegistrationClassName" value="${spellchecker.registration.class}"/>
-                <attribute name="Class-Path" value="${project.name}.jar"/>
+                <attribute name="Class-Path" value="${project.name}.jar zemberek-full.jar"/>
             </manifest>
         </jar>
     </target>
@@ -58,6 +59,7 @@
     <target name="dist" depends="jar" description="Generates distribution.">
         <zip destfile="${project.name}.oxt">
             <zipfileset file="${dist.dir}/${project.name}.jar"/>
+            <zipfileset file="lib/runtime/zemberek-full.jar"/>
             <zipfileset dir="${res.dir}"/>
         </zip>
     </target>
