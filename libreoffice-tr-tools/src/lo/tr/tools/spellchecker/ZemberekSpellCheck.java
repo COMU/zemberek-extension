@@ -29,11 +29,11 @@ public class ZemberekSpellCheck implements TurkishLinguist {
     }
 
     public boolean isCorrect(String w) {
-        return spellChecker.check(w);
+        return spellChecker.check(w.replaceAll("\\p{Punct}+$", ""));
     }
 
     public List<String> getSuggestions(String s) {
-        List<String> suggestions = spellChecker.suggestForWord(s);
+        List<String> suggestions = spellChecker.suggestForWord(s.replaceAll("\\p{Punct}+$", ""));
         if (suggestions.size() > 7)
             return suggestions.subList(0, 7);
         else
