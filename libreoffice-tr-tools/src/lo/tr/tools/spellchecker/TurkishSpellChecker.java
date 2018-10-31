@@ -1,42 +1,5 @@
 package lo.tr.tools.spellchecker;
 
-/* -*- Mode: Java; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
-/*************************************************************************
- *
- *  The Contents of this file are made available subject to the terms of
- *  the BSD license.
- *
- *  Copyright 2000, 2010 Oracle and/or its affiliates.
- *  All rights reserved.
- *
- *  Redistribution and use in source and binary forms, with or without
- *  modification, are permitted provided that the following conditions
- *  are met:
- *  1. Redistributions of source code must retain the above copyright
- *     notice, this list of conditions and the following disclaimer.
- *  2. Redistributions in binary form must reproduce the above copyright
- *     notice, this list of conditions and the following disclaimer in the
- *     documentation and/or other materials provided with the distribution.
- *  3. Neither the name of Sun Microsystems, Inc. nor the names of its
- *     contributors may be used to endorse or promote products derived
- *     from this software without specific prior written permission.
- *
- *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- *  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- *  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- *  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
- *  COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
- *  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- *  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
- *  OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- *  ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
- *  TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- *  USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- *************************************************************************/
-
-// uno
-
 import com.sun.star.beans.PropertyValue;
 import com.sun.star.beans.XPropertySet;
 import com.sun.star.lang.IllegalArgumentException;
@@ -48,9 +11,10 @@ import com.sun.star.uno.Exception;
 import com.sun.star.uno.UnoRuntime;
 import lo.tr.tools.OneInstanceFactory;
 import lo.tr.tools.XSpellAlternatives_impl;
-
+import zemberek.core.logging.Log;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class TurkishSpellChecker extends ComponentBase implements
@@ -60,84 +24,81 @@ public class TurkishSpellChecker extends ComponentBase implements
         XServiceDisplayName,
         XServiceInfo {
 
-    public static String _aSvcImplName = TurkishSpellChecker.class.getName();
-    static Locale turkishLocale = new Locale("tr", "TR", "");
-    static Locale defaultLocale = new Locale();
+    private static final String[] EMPTY_STRING_ARRAY = new String[0];
+    private static String serviceName = TurkishSpellChecker.class.getName();
+    private static Locale turkishLocale = new Locale("tr", "TR", "");
+    private static Locale defaultLocale = new Locale();
 
-    //TODO: change this with Zemberek later.
-    //private static DummyTurkishLinguist dummyTurkishLinguist = new DummyTurkishLinguist();
-    private static ZemberekSpellCheck zemberekSpellCheckInstance = ZemberekSpellCheck.getInstance();
+    private static String[] supportedServiceNames = {
+            "com.sun.star.linguistic2.SpellChecker",
+            "lo.tr.tools.spellchecker.TurkishSpellChecker"
+    };
 
-    PropChgHelper_Spell aPropChgHelper;
-    ArrayList<?> aEvtListeners;
-    boolean bDisposing;
+    private static ZemberekSpellCheck spellChecker =
+            ZemberekSpellCheck.getInstance();
+
+    PropChgHelper_Spell propertyChangeHelper;
+    ArrayList<?> eventListeners;
+    private boolean disposing;
 
     public TurkishSpellChecker() {
         // names of relevant properties to be used
-        String[] aProps = new String[]
-                {
-                        "IsIgnoreControlCharacters",
-                        "IsUseDictionaryList",
-                        "IsSpellUpperCase",
-                        "IsSpellWithDigits",
-                        "IsSpellCapitalization"
-                };
-        aPropChgHelper = new PropChgHelper_Spell(this, aProps);
-        aEvtListeners = new ArrayList<Object>();
-        bDisposing = false;
+        String[] aProps = new String[]{
+                "IsIgnoreControlCharacters",
+                "IsUseDictionaryList",
+                "IsSpellUpperCase",
+                "IsSpellWithDigits",
+                "IsSpellCapitalization"};
+
+        propertyChangeHelper = new PropChgHelper_Spell(this, aProps);
+        eventListeners = new ArrayList<>();
+        disposing = false;
     }
 
-    public static String[] getSupportedServiceNames_Static() {
-        String[] aResult = {
-                "com.sun.star.linguistic2.SpellChecker",
-                "lo.tr.tools.spellchecker.TurkishSpellChecker",
-        };
-        return aResult;
+    private boolean isEqual(Locale l1, Locale l2) {
+        return l1.Language.equals(l2.Language) &&
+                l1.Country.equals(l2.Country) &&
+                l1.Variant.equals(l2.Variant);
     }
 
-    private boolean IsEqual(Locale aLoc1, Locale aLoc2) {
-        return aLoc1.Language.equals(aLoc2.Language) &&
-                aLoc1.Country.equals(aLoc2.Country) &&
-                aLoc1.Variant.equals(aLoc2.Variant);
-    }
-
-    private boolean GetValueToUse(
-            String aPropName,
-            boolean bDefaultVal,
-            PropertyValue[] aProps) {
-        boolean bRes = bDefaultVal;
+    private boolean getValueToUse(
+            String property,
+            boolean defaultValue,
+            PropertyValue[] properties) {
+        boolean result = defaultValue;
 
         try {
             // use temporary value if supplied
-            for (int i = 0; i < aProps.length; ++i) {
-                if (aPropName.equals(aProps[i].Name)) {
-                    Object aObj = aProps[i].Value;
-                    if (AnyConverter.isBoolean(aObj)) {
-                        bRes = AnyConverter.toBoolean(aObj);
-                        return bRes;
+            for (PropertyValue p : properties) {
+                if (property.equals(p.Name)) {
+                    if (AnyConverter.isBoolean(p.Value)) {
+                        return AnyConverter.toBoolean(p.Value);
                     }
                 }
             }
 
             // otherwise use value from property set (if available)
-            XPropertySet xPropSet = aPropChgHelper.GetPropSet();
+            XPropertySet xPropSet = propertyChangeHelper.GetPropSet();
             if (xPropSet != null)   // should always be the case
             {
-                Object aObj = xPropSet.getPropertyValue(aPropName);
+                Object aObj = xPropSet.getPropertyValue(property);
                 if (AnyConverter.isBoolean(aObj))
-                    bRes = AnyConverter.toBoolean(aObj);
+                    result = AnyConverter.toBoolean(aObj);
             }
         } catch (Exception e) {
-            bRes = bDefaultVal;
+            Log.warn("Exception occurred " + e.getMessage());
         }
 
-        return bRes;
+        return result;
     }
 
-    private boolean IsUpper(String aWord, Locale aLocale) {
-        java.util.Locale aLang = new java.util.Locale(
-                aLocale.Language, aLocale.Country, aLocale.Variant);
-        return aWord.equals(aWord.toUpperCase(aLang));
+    private boolean isUpper(String word) {
+        for (int i = 0; i < word.length(); i++) {
+            if (!Character.isUpperCase(word.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
     }
 
     // __________ interface methods __________
@@ -145,123 +106,111 @@ public class TurkishSpellChecker extends ComponentBase implements
 
     //XSupportedLocales
 
-    private boolean HasDigits(String aWord) {
-        int nLen = aWord.length();
-        for (int i = 0; i < nLen; ++i) {
-            if (Character.isDigit(aWord.charAt(i)))
+    private boolean hasDigits(String word) {
+        for (int i = 0; i < word.length(); ++i) {
+            if (Character.isDigit(word.charAt(i)))
                 return true;
         }
         return false;
     }
 
-    private short GetSpellFailure(
-            String aWord,
-            Locale aLocale,
-            PropertyValue[] aProperties){
-        short nRes = -1;
-        if (IsEqual(aLocale, turkishLocale)) {
-            if (!zemberekSpellCheckInstance.isCorrect(aWord)) {
-                nRes = SpellFailure.SPELLING_ERROR;
-            }
-        }
-        return nRes;
-    }
+    private short getSpellFailure(String word, Locale locale) {
 
+        if (isEqual(locale, turkishLocale) && !spellChecker.isCorrect(word)) {
+            return SpellFailure.SPELLING_ERROR;
+        }
+        return -1;
+    }
 
     //XSpellChecker
 
-    private XSpellAlternatives GetProposals(
-            String aWord,
-            Locale aLocale,
-            PropertyValue[] aProperties) {
+    private XSpellAlternatives getProposals(
+            String word,
+            Locale locale) {
 
-        short nType = SpellFailure.SPELLING_ERROR;
-        String[] aProposals = null;
+        String[] proposals = EMPTY_STRING_ARRAY;
 
-        if (IsEqual(aLocale, turkishLocale)) {
-            List<String> proposalList = zemberekSpellCheckInstance.getSuggestions(aWord);
-            aProposals = proposalList.toArray(new String[0]);
-            if (aProposals.length == 0) {
-                aProposals = new String[1];
+        if (isEqual(locale, turkishLocale)) {
+            List<String> proposalList = spellChecker.getSuggestions(word);
+            if (proposalList.size() > 0) {
+                proposals = proposalList.toArray(new String[0]);
             }
         }
 
         // always return a result if word is incorrect,
         // proposals may be empty though.
-        return new XSpellAlternatives_impl(aWord, aLocale,
-                nType, aProposals);
+        return new XSpellAlternatives_impl(
+                word,
+                locale,
+                SpellFailure.SPELLING_ERROR,
+                proposals);
 
     }
 
-    public Locale[] getLocales()
-            throws com.sun.star.uno.RuntimeException {
+    public Locale[] getLocales() {
         return new Locale[]{turkishLocale};
     }
 
-
     //XLinguServiceEventBroadcaster
 
-    public boolean hasLocale(Locale aLocale)
-            throws com.sun.star.uno.RuntimeException {
-        boolean bRes = false;
-        if (IsEqual(aLocale, turkishLocale)) bRes = true;
-        return bRes;
+    public boolean hasLocale(Locale locale) {
+        return isEqual(locale, turkishLocale);
     }
 
     public boolean isValid(
-            String aWord, Locale aLocale,
-            PropertyValue[] aProperties)
-            throws com.sun.star.uno.RuntimeException,
-            IllegalArgumentException {
-        if (IsEqual(aLocale, defaultLocale) || aWord.length() == 0)
+            String word,
+            Locale locale,
+            PropertyValue[] properties) {
+
+        if (isEqual(locale, defaultLocale) || word.length() == 0)
             return true;
 
         // linguistic is currently not allowed to throw exceptions
         // thus we return null which means 'word cannot be spelled'
-        if (!hasLocale(aLocale))
+        if (!hasLocale(locale))
             return true;
 
         // get values of relevant properties that may be used.
         //! The values for 'IsIgnoreControlCharacters' and 'IsUseDictionaryList'
         //! are handled by the dispatcher! Thus there is no need to access
         //! them here.
-        boolean bIsSpellWithDigits = GetValueToUse("IsSpellWithDigits", false, aProperties);
-        boolean bIsSpellUpperCase = GetValueToUse("IsSpellUpperCase", false, aProperties);
-        boolean bIsSpellCapitalization = GetValueToUse("IsSpellCapitalization", true, aProperties);
+        boolean bIsSpellWithDigits = getValueToUse("IsSpellWithDigits", true, properties);
+        boolean bIsSpellUpperCase = getValueToUse("IsSpellUpperCase", false, properties);
+        boolean bIsSpellCapitalization = getValueToUse("IsSpellCapitalization", true, properties);
 
-        short nFailure = GetSpellFailure (aWord, aLocale, aProperties);
+        short nFailure = getSpellFailure(word, locale);
         if (nFailure != -1) {
             // postprocess result for errors that should be ignored
-            if ((!bIsSpellUpperCase && IsUpper(aWord, aLocale))
-                    || (!bIsSpellWithDigits && HasDigits(aWord))
-                    || (!bIsSpellCapitalization
-                    && nFailure == SpellFailure.CAPTION_ERROR)
-            )
+            if ((!bIsSpellUpperCase && isUpper(word))
+                    || (!bIsSpellWithDigits && hasDigits(word))
+                    || (!bIsSpellCapitalization && nFailure == SpellFailure.CAPTION_ERROR)
+            ) {
                 nFailure = -1;
+            }
         }
 
         return nFailure == -1;
     }
 
-
     // XServiceDisplayName
 
     public XSpellAlternatives spell(
-            String aWord, Locale aLocale,
-            PropertyValue[] aProperties)
-            throws com.sun.star.uno.RuntimeException,
-            IllegalArgumentException {
-        if (IsEqual(aLocale, defaultLocale) || aWord.length() == 0)
+            String word,
+            Locale locale,
+            PropertyValue[] properties)
+            throws IllegalArgumentException {
+
+        if (isEqual(locale, defaultLocale) || word.length() == 0)
             return null;
 
         // linguistic is currently not allowed to throw exceptions
-        // thus we return null fwhich means 'word cannot be spelled'
-        if (!hasLocale(aLocale))
+        // thus we return null which means 'word cannot be spelled'
+        if (!hasLocale(locale))
             return null;
 
         XSpellAlternatives xRes = null;
-        if (!isValid(aWord, aLocale, aProperties)) {
-            xRes = GetProposals(aWord, aLocale, aProperties);
+        if (!isValid(word, locale, properties)) {
+            xRes = getProposals(word, locale);
         }
         return xRes;
     }
@@ -269,69 +218,46 @@ public class TurkishSpellChecker extends ComponentBase implements
 
     // XInitialization
 
-    public boolean addLinguServiceEventListener(
-            XLinguServiceEventListener xLstnr)
-            throws com.sun.star.uno.RuntimeException {
-        boolean bRes = false;
-        if (!bDisposing && xLstnr != null)
-            bRes = aPropChgHelper.addLinguServiceEventListener(xLstnr);
-        return bRes;
+    public boolean addLinguServiceEventListener(XLinguServiceEventListener xLstnr) {
+        if (!disposing && xLstnr != null) {
+            return propertyChangeHelper.addLinguServiceEventListener(xLstnr);
+        }
+        return false;
     }
-
 
     // XServiceInfo
 
-    public boolean removeLinguServiceEventListener(
-            XLinguServiceEventListener xLstnr)
-            throws com.sun.star.uno.RuntimeException {
-        boolean bRes = false;
-        if (!bDisposing && xLstnr != null)
-            bRes = aPropChgHelper.removeLinguServiceEventListener(xLstnr);
-        return bRes;
+    public boolean removeLinguServiceEventListener(XLinguServiceEventListener xLstnr) {
+
+        if (!disposing && xLstnr != null) {
+            return propertyChangeHelper.removeLinguServiceEventListener(xLstnr);
+        }
+        return false;
     }
 
-    public String getServiceDisplayName(Locale aLocale)
-            throws com.sun.star.uno.RuntimeException {
+    public String getServiceDisplayName(Locale aLocale) {
         return "TurkishSpellChecker";
     }
 
-    public void initialize(Object[] aArguments)
-            throws com.sun.star.uno.Exception,
-            com.sun.star.uno.RuntimeException {
-        int nLen = aArguments.length;
-        if (2 == nLen) {
-            XPropertySet xPropSet = UnoRuntime.queryInterface(
-                    XPropertySet.class, aArguments[0]);
+    public void initialize(Object[] aArguments) {
+        if (2 == aArguments.length) {
+            XPropertySet xPropSet = UnoRuntime.queryInterface(XPropertySet.class, aArguments[0]);
             // start listening to property changes
-            aPropChgHelper.AddAsListenerTo(xPropSet);
+            propertyChangeHelper.AddAsListenerTo(xPropSet);
         }
     }
 
-    // __________ static things __________
-
-    public boolean supportsService(String aServiceName)
-            throws com.sun.star.uno.RuntimeException {
-        String[] aServices = getSupportedServiceNames_Static();
-        int i, nLength = aServices.length;
-        boolean bResult = false;
-
-        for (i = 0; !bResult && i < nLength; ++i)
-            bResult = aServiceName.equals(aServices[i]);
-
-        return bResult;
+    public boolean supportsService(String serviceName) {
+        return Arrays.asList(supportedServiceNames).contains(serviceName);
     }
 
-    public String getImplementationName()
-            throws com.sun.star.uno.RuntimeException {
-        return _aSvcImplName;
+    public String getImplementationName() {
+        return serviceName;
     }
 
-    public String[] getSupportedServiceNames()
-            throws com.sun.star.uno.RuntimeException {
-        return getSupportedServiceNames_Static();
+    public String[] getSupportedServiceNames() {
+        return supportedServiceNames;
     }
-
-    private static XMultiServiceFactory xMultiFactory;
 
     /**
      * Returns a factory for creating the service.
@@ -347,14 +273,13 @@ public class TurkishSpellChecker extends ComponentBase implements
     public static XSingleServiceFactory __getServiceFactory(String aImplName,
                                                             XMultiServiceFactory xMultiFactoryTmp,
                                                             com.sun.star.registry.XRegistryKey xRegKey) {
-        xMultiFactory = xMultiFactoryTmp;
         XSingleServiceFactory xSingleServiceFactory = null;
-        if (aImplName.equals(_aSvcImplName)) {
+        if (aImplName.equals(serviceName)) {
             xSingleServiceFactory = new OneInstanceFactory(
                     TurkishSpellChecker.class,
-                    _aSvcImplName,
-                    getSupportedServiceNames_Static(),
-                    xMultiFactory);
+                    serviceName,
+                    supportedServiceNames,
+                    xMultiFactoryTmp);
         }
         return xSingleServiceFactory;
     }
@@ -371,14 +296,12 @@ public class TurkishSpellChecker extends ComponentBase implements
     public static boolean __writeRegistryServiceInfo(
             com.sun.star.registry.XRegistryKey xRegKey) {
         boolean bResult = true;
-        String[] aServices = getSupportedServiceNames_Static();
+        String[] aServices = supportedServiceNames;
         int i, nLength = aServices.length;
         for (i = 0; i < nLength; ++i) {
             bResult = bResult && com.sun.star.comp.loader.FactoryHelper.writeRegistryServiceInfo(
-                    _aSvcImplName, aServices[i], xRegKey);
+                    serviceName, aServices[i], xRegKey);
         }
         return bResult;
     }
 }
-
-/* vim:set shiftwidth=4 softtabstop=4 expandtab: */
