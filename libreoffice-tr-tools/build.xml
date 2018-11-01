@@ -51,7 +51,7 @@
             <fileset dir="${build.dir}"/>
             <manifest>
                 <attribute name="RegistrationClassName" value="${spellchecker.registration.class}"/>
-                <attribute name="Class-Path" value="${project.name}.jar zemberek-full.jar"/>
+                <attribute name="Class-Path" value="${project.name}.jar zemberek-lo.jar"/>
             </manifest>
         </jar>
     </target>
@@ -59,7 +59,7 @@
     <target name="dist" depends="jar" description="Generates distribution.">
         <zip destfile="${project.name}.oxt">
             <zipfileset file="${dist.dir}/${project.name}.jar"/>
-            <zipfileset file="lib/runtime/zemberek-full.jar"/>
+            <zipfileset file="lib/runtime/zemberek-lo.jar"/>
             <zipfileset dir="${res.dir}"/>
         </zip>
     </target>
