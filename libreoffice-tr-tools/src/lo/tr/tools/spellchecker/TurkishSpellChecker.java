@@ -67,52 +67,6 @@ public class TurkishSpellChecker extends ComponentBase implements
     disposing = false;
   }
 
-  /**
-   * Returns a factory for creating the service. This method is called by the
-   * <code>JavaLoader</code>
-   * <p>
-   *
-   * @param aImplName the name of the implementation for which a service is desired
-   * @param xMultiFactoryTmp the service manager to be used if needed
-   * @param xRegKey the registryKey
-   * @return returns a <code>XSingleServiceFactory</code> for creating the component
-   * @see com.sun.star.comp.loader.JavaLoader
-   */
-  public static XSingleServiceFactory __getServiceFactory(String aImplName,
-      XMultiServiceFactory xMultiFactoryTmp,
-      com.sun.star.registry.XRegistryKey xRegKey) {
-    XSingleServiceFactory xSingleServiceFactory = null;
-    if (aImplName.equals(serviceName)) {
-      xSingleServiceFactory = new OneInstanceFactory(
-          TurkishSpellChecker.class,
-          serviceName,
-          supportedServiceNames,
-          xMultiFactoryTmp);
-    }
-    return xSingleServiceFactory;
-  }
-
-  /**
-   * Writes the service information into the given registry key. This method is called by the
-   * <code>JavaLoader</code>
-   * <p>
-   *
-   * @param xRegKey the registryKey
-   * @return returns true if the operation succeeded
-   * @see com.sun.star.comp.loader.JavaLoader
-   */
-  public static boolean __writeRegistryServiceInfo(
-      com.sun.star.registry.XRegistryKey xRegKey) {
-    boolean bResult = true;
-    String[] aServices = supportedServiceNames;
-    int i, nLength = aServices.length;
-    for (i = 0; i < nLength; ++i) {
-      bResult = bResult && com.sun.star.comp.loader.FactoryHelper.writeRegistryServiceInfo(
-          serviceName, aServices[i], xRegKey);
-    }
-    return bResult;
-  }
-
   private boolean isEqual(Locale l1, Locale l2) {
     return l1.Language.equals(l2.Language) &&
         l1.Country.equals(l2.Country) &&
@@ -321,6 +275,52 @@ public class TurkishSpellChecker extends ComponentBase implements
     return supportedServiceNames;
   }
 
+  /**
+   * Returns a factory for creating the service. This method is called by the
+   * <code>JavaLoader</code>
+   * <p>
+   *
+   * @param aImplName the name of the implementation for which a service is desired
+   * @param xMultiFactoryTmp the service manager to be used if needed
+   * @param xRegKey the registryKey
+   * @return returns a <code>XSingleServiceFactory</code> for creating the component
+   * @see com.sun.star.comp.loader.JavaLoader
+   */
+  public static XSingleServiceFactory __getServiceFactory(String aImplName,
+      XMultiServiceFactory xMultiFactoryTmp,
+      com.sun.star.registry.XRegistryKey xRegKey) {
+    XSingleServiceFactory xSingleServiceFactory = null;
+    if (aImplName.equals(serviceName)) {
+      xSingleServiceFactory = new OneInstanceFactory(
+          TurkishSpellChecker.class,
+          serviceName,
+          supportedServiceNames,
+          xMultiFactoryTmp);
+    }
+    return xSingleServiceFactory;
+  }
+
+  /**
+   * Writes the service information into the given registry key. This method is called by the
+   * <code>JavaLoader</code>
+   * <p>
+   *
+   * @param xRegKey the registryKey
+   * @return returns true if the operation succeeded
+   * @see com.sun.star.comp.loader.JavaLoader
+   */
+  public static boolean __writeRegistryServiceInfo(
+      com.sun.star.registry.XRegistryKey xRegKey) {
+    boolean bResult = true;
+    String[] aServices = supportedServiceNames;
+    int i, nLength = aServices.length;
+    for (i = 0; i < nLength; ++i) {
+      bResult = bResult && com.sun.star.comp.loader.FactoryHelper.writeRegistryServiceInfo(
+          serviceName, aServices[i], xRegKey);
+    }
+    return bResult;
+  }
+
   static class PropChgHelperSpell extends PropChgHelper {
 
     PropChgHelperSpell(
@@ -345,18 +345,21 @@ public class TurkishSpellChecker extends ComponentBase implements
           case "IsIgnoreControlCharacters":
             // nothing to be done
             break;
+
           case "IsUseDictionaryList":
             bSCWA = bSWWA = true;
             break;
+
           case "IsSpellUpperCase":
             bSCWA = !bVal;          // FALSE->TRUE change?
             bSWWA = !bSCWA;         // TRUE->FALSE change?
             break;
+
           case "IsSpellWithDigits":
             bSCWA = !bVal;          // FALSE->TRUE change?
             bSWWA = !bSCWA;         // TRUE->FALSE change?
-
             break;
+
           case "IsSpellCapitalization":
             bSCWA = !bVal;      // FALSE->TRUE change?
             bSWWA = !bSCWA;     // TRUE->FALSE change?
