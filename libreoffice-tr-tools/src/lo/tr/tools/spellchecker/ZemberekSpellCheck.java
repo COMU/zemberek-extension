@@ -1,9 +1,7 @@
 package lo.tr.tools.spellchecker;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-
 import zemberek.morphology.TurkishMorphology;
 import zemberek.normalization.TurkishSpellChecker;
 
