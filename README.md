@@ -56,12 +56,12 @@ $ sudo apt install openjdk-8-jre
 ![Yeniden Başlat](https://github.com/COMU/zemberek-extension/blob/master/site/images/restart.png)
 
 ## Olası Sorunlar
-* LibreOffice belgesi düzenlemeye başlandığı esnada Zemberek Eklentisinin başlatılması biraz zaman alabilir. Bu birkaç saniye donmaya sebep olabilir.
+* Eklenti, LibreOffice'in başlangıçta bir kaç saniye geç yanıt vermesine sebep olabilir.
 * Bu bir erken deneme sürümü olduğu için beklenmedik hatalar ile karşılaşılması, yazım denetimi sırasında bazı yanlışlıkların ortaya çıkması olasıdır. Böyle durumlarda lütfen bizi bilgilendiriniz.
 
 Bu konuda daha fazla bilgi almak isterseniz [Issues](https://github.com/COMU/zemberek-extension/issues) bölümüne bakabilirsiniz. Yeni bir sorunla karşılaşırsanız yeni bir issue oluşturarak bizi bilgilendirebilirsiniz.
 
-## LİSANS
+## Lisans
 Bu projenin içeriği MPLv2 ile lisanslanmıştır. Detaylı bilgi için [Mozilla Public License 2.0](https://github.com/COMU/zemberek-extension/blob/master/LICENSE) inceleyebilirsiniz.
 
 ## Sorumluluk Reddi Beyanı
