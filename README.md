@@ -3,7 +3,7 @@ LibreOffice Türkçe Dil Araçları
 
 LibreOffice Türkçe Dil Araçları, [Zemberek-NLP](https://github.com/ahmetaa/zemberek-nlp) Türkçe Doğal Dil İşleme kütüphanesi kullanılarak yazılmış bir Türkçe Yazım Denetimi eklentisidir.
 
-![](https://github.com/COMU/LibreOffice Türkçe Dil Araçları/blob/master/site/images/example.gif)
+![](https://github.com/COMU/zemberek-extension/blob/master/site/images/example.gif)
 
 ## Gereksinimler
 
@@ -37,29 +37,29 @@ $ sudo apt install openjdk-8-jre
 
 * Araçlar(Tools) menüsünden Eklenti Yöneticisini(Extension Manager) seçerek veya ***Ctrl + Alt + E*** kısayolunu kullanarak Eklenti yöneticisini açın.
 
-![Eklenti Yöneticisi](https://github.com/COMU/LibreOffice Türkçe Dil Araçları/blob/master/site/images/extension_manager.png)
+![Eklenti Yöneticisi](https://github.com/COMU/zemberek-extension/blob/master/site/images/extension_manager.png)
 
 * Eklenti yöneticisi penceresinde Ekle(Add) düğmesine tıklayın.
 
-![Eklenti Ekle](https://github.com/COMU/LibreOffice Türkçe Dil Araçları/blob/master/site/images/add_extension.png)
+![Eklenti Ekle](https://github.com/COMU/zemberek-extension/blob/master/site/images/add_extension.png)
 
 * Açılan dosya seçimi penceresinde daha önce indirdiğiniz eklenti dosyasını seçin ve ardından Aç(Open) düğmesine basın.
 
-![Eklenti Dosyası Seçimi](https://github.com/COMU/LibreOffice Türkçe Dil Araçları/blob/master/site/images/select_extension.png)
+![Eklenti Dosyası Seçimi](https://github.com/COMU/zemberek-extension/blob/master/site/images/select_extension.png)
 
 * Eklentinin yüklenmesi birkaç saniye alabilir. Eklenti yüklendikten sonra Eklenti yöneticisini kapatabilirsiniz.
 
-![Kapat](https://github.com/COMU/LibreOffice Türkçe Dil Araçları/blob/master/site/images/close_em.png)
+![Kapat](https://github.com/COMU/zemberek-extension/blob/master/site/images/close_em.png)
 
 * Eklenti yüklendikten sonra kullanmaya başlamak için LibreOffice yeniden başlatılmalıdır. Bunun için Eklenti yöneticisi kapatıldıktan sonra gelen uyarı kutusunda Şimdi Yeniden Başlat(Restart Now) düğmesine tıklayarak LibreOffice'i yeniden başlatabilirsiniz.
 
-![Yeniden Başlat](https://github.com/COMU/LibreOffice Türkçe Dil Araçları/blob/master/site/images/restart.png)
+![Yeniden Başlat](https://github.com/COMU/zemberek-extension/blob/master/site/images/restart.png)
 
 ## Olası Sorunlar
 * LibreOffice belgesi düzenlemeye başlandığı esnada Zemberek Eklentisinin başlatılması biraz zaman alabilir. Bu birkaç saniye donmaya sebep olabilir.
 * Bu bir erken deneme sürümü olduğu için beklenmedik hatalar ile karşılaşılması, yazım denetimi sırasında bazı yanlışlıkların ortaya çıkması olasıdır. Böyle durumlarda lütfen bizi bilgilendiriniz.
 
-Bu konuda daha fazla bilgi almak isterseniz [Issues](https://github.com/COMU/LibreOffice Türkçe Dil Araçları/issues) bölümüne bakabilirsiniz. Yeni bir sorunla karşılaşırsanız yeni bir issue oluşturarak bizi bilgilendirebilirsiniz.
+Bu konuda daha fazla bilgi almak isterseniz [Issues](https://github.com/COMU/zemberek-extension/issues) bölümüne bakabilirsiniz. Yeni bir sorunla karşılaşırsanız yeni bir issue oluşturarak bizi bilgilendirebilirsiniz.
 
 ## LİSANS
 Bu projenin içeriği MPLv2 ile lisanslanmıştır. Detaylı bilgi için [Mozilla Public License 2.0](https://github.com/COMU/zemberek-extension/blob/master/LICENSE) inceleyebilirsiniz.
