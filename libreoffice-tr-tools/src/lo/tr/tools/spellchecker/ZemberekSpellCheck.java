@@ -12,7 +12,6 @@ public class ZemberekSpellCheck implements TurkishLinguist {
   private TurkishMorphology morphology;
   private TurkishSpellChecker spellChecker;
 
-
   private ZemberekSpellCheck() {
     this.morphology = TurkishMorphology.createWithDefaults();
     try {
@@ -32,6 +31,13 @@ public class ZemberekSpellCheck implements TurkishLinguist {
 
   public List<String> getSuggestions(String s) {
     List<String> suggestions = spellChecker.suggestForWord(removePunctuation(s));
+    for (int i = 1; i <= s.length() - 2; i++) {
+      String s1 = s.substring(0, i);
+      String s2 = s.substring(i);
+      if (isCorrect(s1) && isCorrect(s2)) {
+        suggestions.add(0, s1 + " " + s2);
+      }
+    }
     if (suggestions.size() > 7) {
       return suggestions.subList(0, 7);
     }
@@ -41,5 +47,4 @@ public class ZemberekSpellCheck implements TurkishLinguist {
   private String removePunctuation(String s) {
     return s.replaceAll("\\p{Punct}+$", "");
   }
-
 }
