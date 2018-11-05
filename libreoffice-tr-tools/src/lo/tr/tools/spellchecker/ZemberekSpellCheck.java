@@ -2,6 +2,7 @@ package lo.tr.tools.spellchecker;
 
 import java.io.IOException;
 import java.util.List;
+import zemberek.core.turkish.RootAttribute;
 import zemberek.morphology.TurkishMorphology;
 import zemberek.normalization.TurkishSpellChecker;
 
@@ -16,6 +17,10 @@ public class ZemberekSpellCheck implements TurkishLinguist {
     this.morphology = TurkishMorphology.createWithDefaults();
     try {
       this.spellChecker = new TurkishSpellChecker(morphology);
+      // add a predicate to the spell checker
+      // so that informal or out of official Turkish dictionary words are not allowed.
+      this.spellChecker.setAnalysisPredicate(
+          a -> !a.getDictionaryItem().hasAnyAttribute(RootAttribute.Ext, RootAttribute.Informal));
     } catch (IOException e) {
       e.printStackTrace();
     }
