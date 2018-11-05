@@ -229,11 +229,10 @@ public class TurkishSpellChecker extends ComponentBase implements
       return null;
     }
 
-    XSpellAlternatives xRes = null;
     if (!isValid(word, locale, properties)) {
-      xRes = getProposals(word, locale);
+      return getProposals(word, locale);
     }
-    return xRes;
+    return null;
   }
 
   public boolean addLinguServiceEventListener(XLinguServiceEventListener xLstnr) {
@@ -251,7 +250,7 @@ public class TurkishSpellChecker extends ComponentBase implements
     return false;
   }
 
-  public String getServiceDisplayName(Locale aLocale) {
+  public String getServiceDisplayName(Locale locale) {
     return "TurkishSpellChecker";
   }
 
