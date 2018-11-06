@@ -1,7 +1,7 @@
 LibreOffice Türkçe Dil Araçları
 ==================
 
-LibreOffice Türkçe Dil Araçları, [Zemberek-NLP](https://github.com/ahmetaa/zemberek-nlp) Türkçe Doğal Dil İşleme kütüphanesi kullanılarak yazılmış bir Türkçe Yazım Denetimi eklentisidir.
+LibreOffice Türkçe Dil Araçları eklentisi, LibreOffice için [Zemberek-NLP](https://github.com/ahmetaa/zemberek-nlp) kütüphanesi kullanılarak yazılmış bir Türkçe Yazım Denetimi eklentisidir.
 
 ![](https://github.com/COMU/zemberek-extension/blob/master/site/images/example.gif)
 
@@ -23,13 +23,13 @@ java version "1.8.0_191"
 Java(TM) SE Runtime Environment (build 1.8.0_191-b12)
 ```
 
-Eğer sisteminizde Java kurulu değilse ya da daha düşük bir Java sürümü kurulu ise aşağıdaki komutları kullanarak Java 8 kurabilirsiniz.
+Eğer sisteminizde Java kurulu değilse ya da daha düşük bir Java sürümü kurulu ise işletim sisteminize göre Java 8 kurulumu yapılması gerekir. 
+Örneğin Ubuntu Linux için terminalden aşağıdaki komutları kullanarak kurulum yapabilirsiniz. 
 
 ```
 $ sudo apt update
 $ sudo apt install openjdk-8-jre
 ```
-
 
 # Kurulum
 
@@ -56,13 +56,16 @@ $ sudo apt install openjdk-8-jre
 ![Yeniden Başlat](https://github.com/COMU/zemberek-extension/blob/master/site/images/restart.png)
 
 ## Olası Sorunlar
-* Eklenti, LibreOffice'in başlangıçta bir kaç saniye geç yanıt vermesine sebep olabilir.
-* Bu bir erken deneme sürümü olduğu için beklenmedik hatalar ile karşılaşılması, yazım denetimi sırasında bazı yanlışlıkların ortaya çıkması olasıdır. Böyle durumlarda lütfen bizi bilgilendiriniz.
 
-Bu konuda daha fazla bilgi almak isterseniz [Issues](https://github.com/COMU/zemberek-extension/issues) bölümüne bakabilirsiniz. Yeni bir sorunla karşılaşırsanız yeni bir issue oluşturarak bizi bilgilendirebilirsiniz.
+* Eklenti, LibreOffice'in başlangıçta bir kaç saniye geç yanıt vermesine sebep olabilir. 
+* Bu bir erken deneme sürümü olduğu için beklenmedik hatalar ile karşılaşılması, yazım denetimi sırasında bazı yanlışlıkların ortaya çıkması olasıdır. Böyle durumlarda lütfen bizi bilgilendiriniz.
+* Eklentinin bellek kullanımı yüksek olabilir (200 Mb'den fazla). Bu, düşük bellekli sistemlerde yavaş çalışma ya da hiç çalışmama sorununa neden olabilir. 
+
+Bu konularda daha fazla bilgi almak isterseniz [Issues](https://github.com/COMU/zemberek-extension/issues) bölümüne bakabilirsiniz. Yeni bir sorunla karşılaşırsanız yeni bir issue oluşturarak bizi bilgilendirebilirsiniz.
 
 ## Lisans
+
 Bu projenin içeriği MPLv2 ile lisanslanmıştır. Detaylı bilgi için [Mozilla Public License 2.0](https://github.com/COMU/zemberek-extension/blob/master/LICENSE) inceleyebilirsiniz.
 
 ## Sorumluluk Reddi Beyanı
-LibreOffice Türkçe Dil Araçları, belge hazırlama sırasında yapılan yazım ve imla hatalarını en aza indirmek amacıyla hazırlanmış bir Türkçe Yazım Denetimi yazılımıdır. Bu yazılımın kurulumu veya kullanımı sırasında; amacı dışında, kötü bir niyetle ya da verilen talimatların dışında kullanılması durumunda oluşabilecek herhangi bir hasar veya sorundan; kullanıldığı bölgenin yasalarına aykırı şekilde kullanılması durumunda ortaya çıkabilecek herhangi bir yasal işlemden kullanıcının kendisi sorumludur.
+LibreOffice Türkçe Dil Araçları, belge hazırlama sırasında yapılan yazım ve imla hatalarını en aza indirmek amacıyla hazırlanmış bir Türkçe Yazım Denetimi yazılımıdır. Bu yazılımın kurulumu veya kullanımı sırasında oluşabilecek herhangi bir hasar veya sorundan; kullanıldığı bölgenin yasalarına aykırı şekilde kullanılması durumunda ortaya çıkabilecek herhangi bir yasal işlemden kullanıcının kendisi sorumludur.
