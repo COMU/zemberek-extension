@@ -24,12 +24,14 @@ Java(TM) SE Runtime Environment (build 1.8.0_191-b12)
 ```
 
 Eğer sisteminizde Java kurulu değilse ya da daha düşük bir Java sürümü kurulu ise işletim sisteminize göre Java 8 kurulumu yapılması gerekir. 
-Örneğin Ubuntu Linux için terminalden aşağıdaki komutları kullanarak kurulum yapabilirsiniz. 
+Örneğin Ubuntu Linux (Ya da Debian, Linux Mint) için terminalden aşağıdaki komutları kullanarak kurulum yapabilirsiniz. 
 
 ```
 $ sudo apt update
 $ sudo apt install openjdk-8-jre
 ```
+
+İstenirse daha üst bir Java sürümü de kurulabilir. 
 
 # Kurulum
 
