@@ -1,13 +1,23 @@
 LibreOffice Türkçe Dil Araçları
 ==================
 
+  * [Giriş](#giri-)
+  * [Gereksinimler](#gereksinimler)
+  * [Kurulum](#kurulum)
+  * [Olası Sorunlar](#olas--sorunlar)
+  * [Lisans](#lisans)
+  * [Sorumluluk Reddi Beyanı](#sorumluluk-reddi-beyan-)
+
+
+## Giriş
+
 LibreOffice Türkçe Dil Araçları eklentisi, LibreOffice için [Zemberek-NLP](https://github.com/ahmetaa/zemberek-nlp) kütüphanesi kullanılarak yazılmış bir Türkçe Yazım Denetimi eklentisidir.
 
 ![](https://github.com/COMU/zemberek-extension/blob/master/site/images/example.gif)
 
 ## Gereksinimler
 
-### Java 8 veya üstü
+**Java 8 veya üstü**
 
 LibreOffice Türkçe Dil Araçları'nı kullanabilmek için sisteminizde Java 8 veya üzeri bir sürümünün kurulu olması gerekmektedir.
 
@@ -33,7 +43,7 @@ $ sudo apt install openjdk-8-jre
 
 İstenirse daha üst bir Java sürümü de kurulabilir. 
 
-# Kurulum
+## Kurulum
 
 * Zemberek LibreOffice eklentisini kurmak için .oxt uzantılı eklenti dosyasını [buradan]() indirin.
 
