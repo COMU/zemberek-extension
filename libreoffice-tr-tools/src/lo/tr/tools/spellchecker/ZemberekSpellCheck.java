@@ -31,6 +31,14 @@ public class ZemberekSpellCheck implements TurkishLinguist {
   }
 
   public boolean isCorrect(String w) {
+    int indexOfDash = w.indexOf("-");
+    if (indexOfDash != -1) {
+      String w1 = w.substring(0, indexOfDash);
+      String w2 = w.substring(indexOfDash + 1);
+      if (spellChecker.check(w1) && spellChecker.check(w2)) {
+        return true;
+      }
+    }
     return spellChecker.check(removePunctuation(w));
   }
 
