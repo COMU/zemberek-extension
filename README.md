@@ -45,7 +45,7 @@ $ sudo apt install openjdk-8-jre
 
 ## Kurulum
 
-* Zemberek LibreOffice eklentisini kurmak için .oxt uzantılı eklenti dosyasını [buradan]() indirin.
+* Zemberek LibreOffice eklentisini kurmak için .oxt uzantılı eklenti dosyasını [buradan](https://github.com/COMU/zemberek-extension/releases/download/v0.1.0/libreoffice-tr-tools-0.1.0.oxt) indirin.
 
 * Araçlar(Tools) menüsünden Eklenti Yöneticisini(Extension Manager) seçerek veya ***Ctrl + Alt + E*** kısayolunu kullanarak Eklenti yöneticisini açın.
 
