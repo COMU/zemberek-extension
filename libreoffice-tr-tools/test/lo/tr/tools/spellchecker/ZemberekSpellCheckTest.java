@@ -7,6 +7,6 @@ public class ZemberekSpellCheckTest {
     System.out.println("is yanlıs correct ?");
     System.out.println(zemberekSpellCheckInstance.isCorrect("yanlıs"));
     System.out.println("succest for yanlıs ");
-    System.out.println(zemberekSpellCheckInstance.getSuggestions("yanlıs"));
+    System.out.println(zemberekSpellCheckInstance.getSuggestions("bölütlemeninkadın"));
   }
 }

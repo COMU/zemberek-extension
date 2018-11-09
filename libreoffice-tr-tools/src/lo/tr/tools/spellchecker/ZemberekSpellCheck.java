@@ -54,11 +54,13 @@ public class ZemberekSpellCheck implements TurkishLinguist {
 
   public List<String> getSuggestions(String s) {
 
-    List<String> suggestions = spellChecker.suggestForWord(removePunctuation(s));
+    List<String> suggestions = new ArrayList<>();
+    suggestions.addAll(splitWordSuggestions(s));
+    suggestions.addAll(spellChecker.suggestForWord(removePunctuation(s)));
     if (suggestions.size() > 7) {
       return suggestions.subList(0, 7);
     }
-    suggestions.addAll(splitWordSuggestions(s));
+
     return suggestions;
   }
 
