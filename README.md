@@ -59,7 +59,7 @@ $ sudo apt install openjdk-8-jre
 
 ![Eklenti Dosyası Seçimi](https://github.com/COMU/zemberek-extension/blob/master/site/images/select_extension.png)
 
-* Eklentinin yüklenmesi birkaç saniye alabilir. Eklenti yüklendikten sonra Eklenti yöneticisini kapatabilirsiniz.
+* Eklentinin yüklenmesi birkaç saniye alabilir. Eklenti yüklendikten sonra Eklenti yöneticisini kapatabilirsiniz. Eğer uzun bir hata mesajı ekrana gelirse aşağıdaki "Olası Sorunlar" bölümüne bakınız. 
 
 ![Kapat](https://github.com/COMU/zemberek-extension/blob/master/site/images/close_em.png)
 
