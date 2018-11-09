@@ -72,6 +72,20 @@ $ sudo apt install openjdk-8-jre
 * Eklenti, LibreOffice'in başlangıçta bir kaç saniye geç yanıt vermesine sebep olabilir. 
 * Bu bir erken deneme sürümü olduğu için beklenmedik hatalar ile karşılaşılması, yazım denetimi sırasında bazı yanlışlıkların ortaya çıkması olasıdır. Böyle durumlarda lütfen bizi bilgilendiriniz.
 * Eklentinin bellek kullanımı yüksek olabilir (200 Mb'den fazla). Bu, düşük bellekli sistemlerde yavaş çalışma ya da hiç çalışmama sorununa neden olabilir. 
+* Ubuntu ve Debian Linux'un önceki sürümleri içinde gelen LibreOffice 5 üzerinde eklenti yüklenirken aşağıdakine benzer bir hata mesajı verebilir:
+
+```
+(com.sun.star.uno.RuntimeException) { { Message = "[jni_uno bridge error] UNO calling Java method writeRegistryInfo: 
+non-UNO exception occurred: 
+java.lang.NoClassDefFoundError: com/sun/star/linguistic2/XSpellChecker\X000ajava 
+stack trace:\X000a
+java.lang.NoClassDefFoundError: com/sun/star/linguistic2/XSpellChecker\X000a\X0009at java.lang.ClassLoader.defineClass1(Native Method)\X000a\X0009at java.lang.ClassLoader.defineClass(ClassLoader.java:763)\X000a\X0009at
+```
+Bu durumda terminal ekranından aşağıdaki satırı işletip tekrar deneyebilirsiniz. 
+
+```
+sudo apt install libreoffice-java-common 
+```
 
 Bu konularda daha fazla bilgi almak isterseniz [Issues](https://github.com/COMU/zemberek-extension/issues) bölümüne bakabilirsiniz. Yeni bir sorunla karşılaşırsanız yeni bir issue oluşturarak bizi bilgilendirebilirsiniz.
 
