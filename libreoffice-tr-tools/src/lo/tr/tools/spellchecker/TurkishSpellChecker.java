@@ -5,6 +5,7 @@ import com.sun.star.beans.PropertyValue;
 import com.sun.star.beans.XPropertySet;
 import com.sun.star.lang.IllegalArgumentException;
 import com.sun.star.lang.Locale;
+import com.sun.star.lang.XEventListener;
 import com.sun.star.lang.XInitialization;
 import com.sun.star.lang.XMultiServiceFactory;
 import com.sun.star.lang.XServiceDisplayName;
@@ -36,6 +37,12 @@ public class TurkishSpellChecker extends ComponentBase implements
     XServiceDisplayName,
     XServiceInfo {
 
+  @Override
+  public void addEventListener(XEventListener xEventListener) {
+    System.out.println(xEventListener);
+    super.addEventListener(xEventListener);
+  }
+
   static final String[] EMPTY_STRING_ARRAY = new String[0];
   private static String serviceName = TurkishSpellChecker.class.getName();
   private static Locale turkishLocale = new Locale("tr", "TR", "");
@@ -46,8 +53,8 @@ public class TurkishSpellChecker extends ComponentBase implements
       "lo.tr.tools.spellchecker.TurkishSpellChecker"
   };
 
-  private static ZemberekSpellCheck spellChecker =
-      ZemberekSpellCheck.getInstance();
+  private static ZemberekSpellChecker spellChecker =
+      ZemberekSpellChecker.getInstance();
 
   PropChgHelperSpell propertyChangeHelper;
   ArrayList<?> eventListeners;

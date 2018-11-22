@@ -3,6 +3,7 @@ package lo.tr.tools.spellchecker;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 import zemberek.core.ScoredItem;
@@ -10,36 +11,57 @@ import zemberek.core.turkish.RootAttribute;
 import zemberek.lm.LmVocabulary;
 import zemberek.lm.NgramLanguageModel;
 import zemberek.morphology.TurkishMorphology;
+import zemberek.morphology.analysis.InformalAnalysisConverter;
+import zemberek.morphology.analysis.SingleAnalysis;
+import zemberek.morphology.analysis.WordAnalysis;
+import zemberek.morphology.analysis.WordAnalysisSurfaceFormatter;
+import zemberek.morphology.analysis.WordAnalysisSurfaceFormatter.CaseType;
+import zemberek.morphology.generator.WordGenerator;
+import zemberek.morphology.lexicon.RootLexicon;
 import zemberek.normalization.TurkishSpellChecker;
 
-public class ZemberekSpellCheck implements TurkishLinguist {
+public class ZemberekSpellChecker {
 
-  public static ZemberekSpellCheck instance = new ZemberekSpellCheck();
+  public static ZemberekSpellChecker instance = new ZemberekSpellChecker();
 
   private TurkishMorphology morphology;
   private TurkishSpellChecker spellChecker;
   private NgramLanguageModel uniGramLanguageModel;
+  private InformalAnalysisConverter informalConverter;
 
-  private ZemberekSpellCheck() {
-    this.morphology = TurkishMorphology.createWithDefaults();
+  private ZemberekSpellChecker() {
+    this.morphology = TurkishMorphology.builder()
+        .setLexicon(RootLexicon.getDefault())
+        .useInformalAnalysis().build();
     try {
       this.spellChecker = new TurkishSpellChecker(morphology);
       // add a predicate to the spell checker
       // so that informal or out of official Turkish dictionary words are not allowed.
       this.spellChecker.setAnalysisPredicate(
-          a -> !a.getDictionaryItem().hasAnyAttribute(RootAttribute.Ext, RootAttribute.Informal));
+          a -> !a.getDictionaryItem()
+              .hasAnyAttribute(RootAttribute.Ext, RootAttribute.Informal)
+              && !a.containsInformalMorpheme());
       this.uniGramLanguageModel = spellChecker.getUnigramLanguageModel();
-
+      this.informalConverter = new InformalAnalysisConverter(morphology.getWordGenerator());
     } catch (IOException e) {
       e.printStackTrace();
     }
   }
 
-  public static ZemberekSpellCheck getInstance() {
+  public static ZemberekSpellChecker getInstance() {
     return instance;
   }
 
   public boolean isCorrect(String w) {
+
+    if (w == null || w.isEmpty()) {
+      return true;
+    }
+
+    if (w.length() == 1) {
+      return true;
+    }
+
     String input = removePunctuation(w);
     int indexOfDash = input.indexOf("-");
     if (indexOfDash != -1) {
@@ -54,14 +76,54 @@ public class ZemberekSpellCheck implements TurkishLinguist {
 
   public List<String> getSuggestions(String s) {
 
-    List<String> suggestions = new ArrayList<>();
-    suggestions.addAll(splitWordSuggestions(s));
-    suggestions.addAll(spellChecker.suggestForWord(removePunctuation(s)));
-    if (suggestions.size() > 7) {
-      return suggestions.subList(0, 7);
-    }
+    LinkedHashSet<String> suggestions = new LinkedHashSet<>(splitWordSuggestions(s));
+    String word = removePunctuation(s);
+    suggestions.addAll(informalWordSuggestions(word));
+    suggestions.addAll(spellChecker.suggestForWord(word));
 
-    return suggestions;
+    List<String> result = new ArrayList<>(suggestions);
+    if (result.size() > 9) {
+
+      return result.subList(0, 9);
+    }
+    return result;
+  }
+
+  private static WordAnalysisSurfaceFormatter formatter = new WordAnalysisSurfaceFormatter();
+
+  private List<String> informalWordSuggestions(String s) {
+
+    CaseType caseType = formatter.guessCase(s);
+
+    WordAnalysis a = morphology.analyze(s);
+    if (a.analysisCount() == 0) {
+      return Collections.emptyList();
+    }
+    List<String> result = new ArrayList<>(1);
+    for (SingleAnalysis analysis : a) {
+      if (analysis.containsInformalMorpheme()) {
+        WordGenerator.Result res = informalConverter.convert(s, analysis);
+        String apostrophe = getApostrophe(s);
+
+        if (formatter.canBeFormatted(analysis, caseType)) {
+          String formatted = formatter.formatToCase(res.analysis, caseType, apostrophe);
+          result.add(formatted);
+        } else {
+          result.add(res.surface);
+        }
+      }
+    }
+    return result;
+  }
+
+  private String getApostrophe(String input) {
+    String apostrophe;
+    if (input.indexOf('’') > 0) {
+      apostrophe = "’";
+    } else {
+      apostrophe = "'";
+    }
+    return apostrophe;
   }
 
   private String removePunctuation(String s) {
@@ -105,6 +167,5 @@ public class ZemberekSpellCheck implements TurkishLinguist {
 
     return suggestions.stream().map(a -> a.item).collect(Collectors.toList());
   }
-
 
 }
