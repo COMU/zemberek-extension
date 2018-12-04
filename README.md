@@ -47,15 +47,15 @@ $ sudo apt install openjdk-8-jre
 
 * Zemberek LibreOffice eklentisini kurmak için .oxt uzantılı eklenti dosyasını [buradan](https://github.com/COMU/zemberek-extension/releases/download/v0.1.0/libreoffice-tr-tools-0.1.0.oxt) indirin.
 
-* Araçlar(Tools) menüsünden Eklenti Yöneticisini(Extension Manager) seçerek veya ***Ctrl + Alt + E*** kısayolunu kullanarak Eklenti yöneticisini açın.
+* Araçlar (Tools) menüsünden Eklenti Yöneticisini (Extension Manager) seçerek veya ***Ctrl + Alt + E*** kısayolunu kullanarak Eklenti yöneticisini açın.
 
 ![Eklenti Yöneticisi](https://github.com/COMU/zemberek-extension/blob/master/site/images/extension_manager.png)
 
-* Eklenti yöneticisi penceresinde Ekle(Add) düğmesine tıklayın.
+* Eklenti yöneticisi penceresinde Ekle (Add) düğmesine tıklayın.
 
 ![Eklenti Ekle](https://github.com/COMU/zemberek-extension/blob/master/site/images/add_extension.png)
 
-* Açılan dosya seçimi penceresinde daha önce indirdiğiniz eklenti dosyasını seçin ve ardından Aç(Open) düğmesine basın.
+* Açılan dosya seçimi penceresinde daha önce indirdiğiniz eklenti dosyasını seçin ve ardından Aç (Open) düğmesine basın.
 
 ![Eklenti Dosyası Seçimi](https://github.com/COMU/zemberek-extension/blob/master/site/images/select_extension.png)
 
@@ -63,7 +63,7 @@ $ sudo apt install openjdk-8-jre
 
 ![Kapat](https://github.com/COMU/zemberek-extension/blob/master/site/images/close_em.png)
 
-* Eklenti yüklendikten sonra kullanmaya başlamak için LibreOffice yeniden başlatılmalıdır. Bunun için Eklenti yöneticisi kapatıldıktan sonra gelen uyarı kutusunda Şimdi Yeniden Başlat(Restart Now) düğmesine tıklayarak LibreOffice'i yeniden başlatabilirsiniz.
+* Eklenti yüklendikten sonra kullanmaya başlamak için LibreOffice yeniden başlatılmalıdır. Bunun için Eklenti yöneticisi kapatıldıktan sonra gelen uyarı kutusunda Şimdi Yeniden Başlat (Restart Now) düğmesine tıklayarak LibreOffice'i yeniden başlatabilirsiniz.
 
 ![Yeniden Başlat](https://github.com/COMU/zemberek-extension/blob/master/site/images/restart.png)
 
