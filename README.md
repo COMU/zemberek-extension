@@ -1,12 +1,12 @@
 LibreOffice Türkçe Dil Araçları
 ==================
 
-  * [Giriş](#giri-)
+  * [Giriş](#giriş)
   * [Gereksinimler](#gereksinimler)
   * [Kurulum](#kurulum)
-  * [Olası Sorunlar](#olas--sorunlar)
+  * [Olası Sorunlar](#olası-sorunlar)
   * [Lisans](#lisans)
-  * [Sorumluluk Reddi Beyanı](#sorumluluk-reddi-beyan-)
+  * [Sorumluluk Reddi Beyanı](#sorumluluk-reddi-beyanı)
 
 
 ## Giriş
