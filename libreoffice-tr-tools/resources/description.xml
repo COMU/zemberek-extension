@@ -4,6 +4,9 @@
              xmlns:xlink="http://www.w3.org/1999/xlink">
     <version value="0.1.0"/>
     <identifier value="lo.tr.tools.spellchecker.TurkishSpellChecker"/>
+    <icon>
+        <default xlink:href="images/icon.jpg" />
+    </icon>
     <display-name>
         <name lang="en">Turkish Language Tools</name>
         <name lang="tr">Türkçe Dil Araçları</name>
