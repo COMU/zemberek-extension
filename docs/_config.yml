@@ -1,1 +1,8 @@
+title: LibreOffice Türkçe Dil Araçları
+description: LibreOffice için Türkçe imla denetimi eklentisi.
+show_downloads: true
+google_analytics:
 theme: jekyll-theme-cayman
+github:
+  oxt_url : https://github.com/COMU/zemberek-extension/releases/download/v0.1.0/libreoffice-tr-tools-0.1.0.oxt
+  repository_url : https://github.com/COMU/zemberek-extension
