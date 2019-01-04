@@ -22,17 +22,26 @@ import zemberek.normalization.TurkishSpellChecker;
 
 public class ZemberekSpellChecker {
 
-  public static ZemberekSpellChecker instance = new ZemberekSpellChecker();
+  public static ZemberekSpellChecker instance = defaultInstance();
 
   private TurkishMorphology morphology;
   private TurkishSpellChecker spellChecker;
   private NgramLanguageModel uniGramLanguageModel;
   private InformalAnalysisConverter informalConverter;
 
-  private ZemberekSpellChecker() {
-    this.morphology = TurkishMorphology.builder()
+  private static ZemberekSpellChecker defaultInstance() {
+    TurkishMorphology morphology = TurkishMorphology.builder()
         .setLexicon(RootLexicon.getDefault())
         .useInformalAnalysis().build();
+    return new ZemberekSpellChecker(morphology);
+  }
+
+  public static ZemberekSpellChecker getInstance() {
+    return instance;
+  }
+
+  private ZemberekSpellChecker(TurkishMorphology morphology) {
+    this.morphology = morphology;
     try {
       this.spellChecker = new TurkishSpellChecker(morphology);
       // add a predicate to the spell checker
@@ -48,9 +57,16 @@ public class ZemberekSpellChecker {
     }
   }
 
-  public static ZemberekSpellChecker getInstance() {
-    return instance;
+  /**
+   * This is used for debugging purposes.
+   */
+  static ZemberekSpellChecker getInstance(RootLexicon lexicon) {
+    TurkishMorphology morphology = TurkishMorphology.builder()
+        .setLexicon(lexicon)
+        .useInformalAnalysis().build();
+    return new ZemberekSpellChecker(morphology);
   }
+
 
   public boolean isCorrect(String w) {
 
@@ -76,14 +92,13 @@ public class ZemberekSpellChecker {
 
   public List<String> getSuggestions(String s) {
 
-    LinkedHashSet<String> suggestions = new LinkedHashSet<>(splitWordSuggestions(s));
+    LinkedHashSet<String> suggestions = new LinkedHashSet<>();
     String word = removePunctuation(s);
     suggestions.addAll(informalWordSuggestions(word));
     suggestions.addAll(spellChecker.suggestForWord(word));
-
+    suggestions.addAll(splitWordSuggestions(s));
     List<String> result = new ArrayList<>(suggestions);
     if (result.size() > 9) {
-
       return result.subList(0, 9);
     }
     return result;
