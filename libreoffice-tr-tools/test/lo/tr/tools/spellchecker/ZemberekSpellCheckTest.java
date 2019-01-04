@@ -8,15 +8,19 @@ public class ZemberekSpellCheckTest {
 
   @Test
   public void testIncorrectWords1() {
-    RootLexicon lexicon = RootLexicon.fromLines("okumak", "gitmek [A:Voicing]");
+    RootLexicon lexicon = getVerbLexicon();
     ZemberekSpellChecker instance = ZemberekSpellChecker.getInstance(lexicon);
     Assert.assertFalse(instance.isCorrect("okuycam"));
     Assert.assertFalse(instance.isCorrect("gidicem"));
   }
 
+  private RootLexicon getVerbLexicon() {
+    return RootLexicon.fromLines("okumak", "gitmek [A:Voicing]");
+  }
+
   @Test
   public void testSuggestions1() {
-    RootLexicon lexicon = RootLexicon.fromLines("okumak", "gitmek [A:Voicing]");
+    RootLexicon lexicon = getVerbLexicon();
     ZemberekSpellChecker instance = ZemberekSpellChecker.getInstance(lexicon);
     String[] inputs = {"ou", "ku", "okuu", "oyu"};
     for (String input : inputs) {
@@ -26,7 +30,7 @@ public class ZemberekSpellCheckTest {
 
   @Test
   public void testSplit1() {
-    RootLexicon lexicon = RootLexicon.fromLines("okumak", "gitmek [A:Voicing]");
+    RootLexicon lexicon = getVerbLexicon();
     ZemberekSpellChecker instance = ZemberekSpellChecker.getInstance(lexicon);
     Assert.assertTrue(instance.getSuggestions("okudumgittim").contains("okudum gittim"));
     Assert.assertTrue(instance.getSuggestions("giderokuyacak").contains("gider okuyacak"));
@@ -34,7 +38,7 @@ public class ZemberekSpellCheckTest {
 
   @Test
   public void testInformalWords1() {
-    RootLexicon lexicon = RootLexicon.fromLines("okumak", "gitmek [A:Voicing]");
+    RootLexicon lexicon = getVerbLexicon();
     ZemberekSpellChecker instance = ZemberekSpellChecker.getInstance(lexicon);
     Assert.assertTrue(instance.getSuggestions("okuycam").contains("okuyacağım"));
     Assert.assertTrue(instance.getSuggestions("gidicem").contains("gideceğim"));
