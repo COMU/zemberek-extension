@@ -147,13 +147,12 @@ public class ZemberekSpellChecker {
   }
 
   private String getApostrophe(String input) {
-    String apostrophe = null;
     if (input.indexOf('’') > 0) {
-      apostrophe = "’";
+      return "’";
     } else if (input.indexOf('\'') > 0) {
-      apostrophe = "'";
+      return "'";
     }
-    return apostrophe;
+    return null;
   }
 
   private String removePunctuation(String s) {
