@@ -1,5 +1,6 @@
 package lo.tr.tools.spellchecker;
 
+import _zem.org.antlr.v4.runtime.Token;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,6 +20,7 @@ import zemberek.morphology.analysis.WordAnalysisSurfaceFormatter.CaseType;
 import zemberek.morphology.generator.WordGenerator;
 import zemberek.morphology.lexicon.RootLexicon;
 import zemberek.normalization.TurkishSpellChecker;
+import zemberek.tokenization.TurkishTokenizer;
 
 public class ZemberekSpellChecker {
 
@@ -60,7 +62,7 @@ public class ZemberekSpellChecker {
   /**
    * This is used for debugging purposes.
    */
-  static ZemberekSpellChecker getInstance(RootLexicon lexicon) {
+  static synchronized ZemberekSpellChecker getInstance(RootLexicon lexicon) {
     TurkishMorphology morphology = TurkishMorphology.builder()
         .setLexicon(lexicon)
         .useInformalAnalysis().build();
@@ -87,7 +89,20 @@ public class ZemberekSpellChecker {
         return true;
       }
     }
-    return spellChecker.check(input);
+
+    boolean passed = spellChecker.check(input);
+    if (passed) {
+      return true;
+    }
+
+    List<Token> tokens = TurkishTokenizer.DEFAULT.tokenize(w);
+    if (tokens.size() != 1) {
+      return false;
+    }
+    Token t = tokens.get(0);
+    List<SingleAnalysis> analyses = morphology.getUnidentifiedTokenAnalyzer().analyze(t);
+    return analyses.size() > 0;
+
   }
 
   public List<String> getSuggestions(String s) {
@@ -132,10 +147,10 @@ public class ZemberekSpellChecker {
   }
 
   private String getApostrophe(String input) {
-    String apostrophe;
+    String apostrophe = null;
     if (input.indexOf('’') > 0) {
       apostrophe = "’";
-    } else {
+    } else if (input.indexOf('\'') > 0) {
       apostrophe = "'";
     }
     return apostrophe;
